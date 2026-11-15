@@ -1,6 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-export declare const createTodo: (req: Request, res: Response, next: NextFunction) => void;
-export declare const getTodos: (req: Request, res: Response, next: NextFunction) => void;
-export declare const updateTodo: (req: Request, res: Response) => void;
-export declare const deleteTodo: (req: Request, res: Response, next: NextFunction) => void;
+export declare class TodoController {
+    private todos;
+    constructor();
+    createTodo(req: Request, res: Response, next: NextFunction): void;
+    getTodos(_req: Request, res: Response): void;
+    updateTodo(req: Request, res: Response): void;
+    deleteTodo(req: Request, res: Response): void;
+}
+export declare const todoController: TodoController;
 //# sourceMappingURL=todos.d.ts.map

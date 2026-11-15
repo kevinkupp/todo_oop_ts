@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createTodo, deleteTodo, getTodos, updateTodo } from "../controllers/todos.js";
+import { todoController } from "../controllers/todos.js";
 const router = Router();
-router.post('/', createTodo);
-router.get('/', getTodos);
-router.patch('/:id', updateTodo);
-router.delete('/:id', deleteTodo);
+router.post('/', todoController.createTodo);
+router.get('/', todoController.getTodos);
+router.patch('/:id', todoController.updateTodo);
+router.delete('/:id', todoController.deleteTodo);
 export default router;
 //# sourceMappingURL=todos.js.map

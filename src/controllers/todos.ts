@@ -1,68 +1,59 @@
 import type { Request, Response, NextFunction } from "express"
 import { Todo } from '../models/todo.js'
 
-const todos: Todo[] = []
+export class TodoController {
+    private todos: Todo[] = []
 
-export const createTodo = (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const task = (req.body as {task: string}).task
-        const newTodo = new Todo(Math.random().toString(), task)
-        todos.push(newTodo)
-        res.status(201).json ({
-            message: 'Created new todo',
-            createdTask: newTodo
-        })
-    } catch(error) {
-        next(error)
+    constructor() {
+        this.createTodo = this.createTodo.bind(this)
+        this.getTodos = this.getTodos.bind(this)
+        this.updateTodo = this.updateTodo.bind(this)
+        this.deleteTodo = this.deleteTodo.bind(this)
     }
-}
 
-export const getTodos = (req: Request, res: Response, next: NextFunction) => {
-    try {
-        res.status(201).json({
-            tasks: todos
-        })
-    } catch(error) {
-        console.log(error)
+    createTodo(req: Request, res: Response, next: NextFunction) {
+        try {
+            const task = (req.body as { task: string }).task
+            const newTodo = new Todo(Math.random().toString(), task)
+            this.todos.push(newTodo)
+            res.status(201).json({
+                message: 'Created new todo',
+                createdTask: newTodo
+            })
+        } catch (error) {
+            next(error)
+        }
     }
-}
 
-export const updateTodo = (req: Request, res: Response) => {
-    try {
-        const todoId = req.params.id
-        const updatedTask = (req.body as {task: string}).task
-        const todoIndex = todos.findIndex(todo => todo.id === todoId)
+    getTodos(_req: Request, res: Response) {
+        res.status(200).json({ tasks: this.todos })
+    }
 
-        if(todoIndex< 0) {
-            throw new Error('Could not find todo with such id')
+    updateTodo(req: Request, res: Response) {
+        const todoIndex = this.todos.findIndex((todo) => todo.id === req.params.id)
+        if (todoIndex < 0) {
+            res.status(404).json({ message: 'Todo not found' })
+            return
         }
 
-        todos[todoIndex] = new Todo(todos[todoIndex].id, updatedTask)
-
-        res.status(201).json({
+        const updatedTask = (req.body as { task: string }).task
+        this.todos[todoIndex] = new Todo(this.todos[todoIndex].id, updatedTask)
+        res.status(200).json({
             message: 'Todo is updated!',
-            updatedTask: todos[todoIndex]
+            updatedTask: this.todos[todoIndex]
         })
-    } catch(error) {
-        console.log(error)
     }
-}
 
-export const deleteTodo = (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const todoId = req.params.id
-        const todoIndex = todos.findIndex(todo => todo.id ===todoId)
-
-        if(todoIndex < 0) {
-            throw new Error('Could not find todo with such id')
+    deleteTodo(req: Request, res: Response) {
+        const todoIndex = this.todos.findIndex((item) => item.id === req.params.id)
+        if (todoIndex === -1) {
+            res.status(404).json({ message: 'Todo not found' })
+            return
         }
 
-        todos.splice(todoIndex, 1)
-
-        res.status(201).json({
-            message: 'Todo is deleted!'
-        })
-    } catch(error) {
-        console.log(error)
+        this.todos.splice(todoIndex, 1)
+        res.status(200).json({ message: 'Todo is deleted!' })
     }
 }
+
+export const todoController = new TodoController()
