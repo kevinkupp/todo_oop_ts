@@ -14,8 +14,15 @@ export const createTodo = (req, res, next) => {
         next(error);
     }
 };
-export const getTodos = (_req, res) => {
-    res.json({ todos });
+export const getTodos = (req, res, next) => {
+    try {
+        res.status(201).json({
+            tasks: todos
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 };
 export const updateTodo = (req, res) => {
     const todo = todos.find((item) => item.id === req.params.id);

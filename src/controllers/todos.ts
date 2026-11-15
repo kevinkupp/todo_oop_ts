@@ -17,8 +17,14 @@ export const createTodo = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export const getTodos = (_req: Request, res: Response) => {
-    res.json({ todos })
+export const getTodos = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.status(201).json({
+            tasks: todos
+        })
+    } catch(error) {
+        console.log(error)
+    }
 }
 
 export const updateTodo = (req: Request, res: Response) => {
