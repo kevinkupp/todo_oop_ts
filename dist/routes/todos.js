@@ -1,16 +1,9 @@
 import { Router } from "express";
+import { createTodo, deleteTodo, getTodos, updateTodo } from "../controllers/todos.js";
 const router = Router();
-router.post('/', (req, res) => {
-    res.send("OK");
-});
-router.get('/', (req, res) => {
-    res.send("OK");
-});
-router.patch('/:id', (req, res) => {
-    res.send("OK");
-});
-router.delete('/:id', (req, res) => {
-    res.send("OK");
-});
+router.post('/', createTodo);
+router.get('/', getTodos);
+router.patch('/:id', updateTodo);
+router.delete('/:id', deleteTodo);
 export default router;
 //# sourceMappingURL=todos.js.map

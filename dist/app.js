@@ -1,5 +1,5 @@
 import express from 'express';
-import { json } from "express";
+import { json } from 'body-parser';
 import todoRoutes from './routes/todos.js';
 const app = express();
 app.use(json());
