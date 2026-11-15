@@ -25,18 +25,22 @@ export const getTodos = (req, res, next) => {
     }
 };
 export const updateTodo = (req, res) => {
-    const todo = todos.find((item) => item.id === req.params.id);
-    if (!todo) {
-        res.status(404).json({ message: 'Todo not found' });
-        return;
+    try {
+        const todoId = req.params.id;
+        const updatedTask = req.body.task;
+        const todoIndex = todos.findIndex(todo => todo.id === todoId);
+        if (todoIndex < 0) {
+            throw new Error('Could not find todo with such id');
+        }
+        todos[todoIndex] = new Todo(todos[todoIndex].id, updatedTask);
+        res.status(201).json({
+            message: 'Todo is updated!',
+            updatedTask: todos[todoIndex]
+        });
     }
-    const task = req.body.task;
-    if (typeof task !== 'string') {
-        res.status(400).json({ message: 'Task must be a string' });
-        return;
+    catch (error) {
+        console.log(error);
     }
-    todo.task = task;
-    res.json({ message: 'Todo updated', updatedTodo: todo });
 };
 export const deleteTodo = (req, res) => {
     const index = todos.findIndex((item) => item.id === req.params.id);
