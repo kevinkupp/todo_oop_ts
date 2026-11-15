@@ -48,13 +48,21 @@ export const updateTodo = (req: Request, res: Response) => {
     }
 }
 
-export const deleteTodo = (req: Request, res: Response) => {
-    const index = todos.findIndex((item) => item.id === req.params.id)
-    if (index === -1) {
-        res.status(404).json({ message: 'Todo not found' })
-        return
-    }
+export const deleteTodo = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const todoId = req.params.id
+        const todoIndex = todos.findIndex(todo => todo.id ===todoId)
 
-    const [deletedTodo] = todos.splice(index, 1)
-    res.json({ message: 'Todo deleted', deletedTodo })
+        if(todoIndex < 0) {
+            throw new Error('Could not find todo with such id')
+        }
+
+        todos.splice(todoIndex, 1)
+
+        res.status(201).json({
+            message: 'Todo is deleted!'
+        })
+    } catch(error) {
+        console.log(error)
+    }
 }

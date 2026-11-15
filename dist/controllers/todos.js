@@ -42,13 +42,20 @@ export const updateTodo = (req, res) => {
         console.log(error);
     }
 };
-export const deleteTodo = (req, res) => {
-    const index = todos.findIndex((item) => item.id === req.params.id);
-    if (index === -1) {
-        res.status(404).json({ message: 'Todo not found' });
-        return;
+export const deleteTodo = (req, res, next) => {
+    try {
+        const todoId = req.params.id;
+        const todoIndex = todos.findIndex(todo => todo.id === todoId);
+        if (todoIndex < 0) {
+            throw new Error('Could not find todo with such id');
+        }
+        todos.splice(todoIndex, 1);
+        res.status(201).json({
+            message: 'Todo is deleted!'
+        });
     }
-    const [deletedTodo] = todos.splice(index, 1);
-    res.json({ message: 'Todo deleted', deletedTodo });
+    catch (error) {
+        console.log(error);
+    }
 };
 //# sourceMappingURL=todos.js.map
